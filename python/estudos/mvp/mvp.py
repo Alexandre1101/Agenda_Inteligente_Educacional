@@ -68,3 +68,10 @@ resposta = chat(
 )
 
 print(resposta.message.content)
+
+
+json_texto = resposta.message.content
+
+dados_dict = json.loads(json_texto)
+
+aula = Aula.model_validate(dados_dict)
