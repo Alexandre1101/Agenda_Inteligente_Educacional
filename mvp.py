@@ -1,8 +1,8 @@
-import whisper
+#import whisper
 from pydantic import BaseModel
 from typing import Optional
 from ollama import chat
-import json
+#import json
 
 #Definindo como os dados serão salvos
 class Prova(BaseModel):
@@ -26,11 +26,13 @@ class Aula(BaseModel):
     provas: list[Prova] = []
     duvidas: list[Duvida] = []
     advertencias: list[Advertencia] = []
-'''
+
+
+r'''
 #transformando áudio em texto
 model = whisper.load_model("large")
 result = model.transcribe(
-    r"C:\Users\alext\VS code pasta\python\estudos\mvp\borix.mp3",
+    r"C:\Users\alext\VS code pasta\python\estudos\mvp\mp3\borix.mp3",
     language="pt",
     fp16=False
 )
@@ -76,11 +78,11 @@ Transcrição:
 {texto}
 """
 resposta = chat(
-    model="seu-modelo",
+    model="llama3.2",
     messages=[
         {
             "role": "user",
-            "content": texto
+            "content": prompt
         }
     ],
     format=Aula.model_json_schema()
@@ -89,9 +91,3 @@ resposta = chat(
 
 print(resposta.message.content)
 
-
-json_texto = resposta.message.content
-
-dados_dict = json.loads(json_texto)
-
-aula = Aula.model_validate(dados_dict)
