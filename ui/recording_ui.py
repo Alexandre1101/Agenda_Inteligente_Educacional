@@ -1,0 +1,1 @@
+#arquivo para interface de gravação de áudio

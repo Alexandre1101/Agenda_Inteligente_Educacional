@@ -1,0 +1,1 @@
+#arquivo para estruturação de arquivos com pydantic, onde vamos formatar o JSON

@@ -1,0 +1,1 @@
+#arquivo para centralizar configurações do programa 
