@@ -26,7 +26,7 @@ class Aula(BaseModel):
     provas: list[Prova] = []
     duvidas: list[Duvida] = []
     advertencias: list[Advertencia] = []
-
+'''
 #transformando áudio em texto
 model = whisper.load_model("large")
 result = model.transcribe(
@@ -36,6 +36,24 @@ result = model.transcribe(
 )
 texto = result["text"]
 print(texto)
+'''
+texto = '''Bom dia, turma. Hoje vamos continuar a matéria de matemática, 
+falando sobre frações e como simplificar frações equivalentes.
+
+Ah, pessoal, lembrando que teremos prova de matemática 
+no dia 20 de outubro, cobrindo frações e números decimais.
+
+O João ficou com dúvida sobre como simplificar frações quando 
+o numerador e o denominador são números grandes, então vamos 
+retomar isso na próxima aula com mais exemplos.
+
+A Mariana também perguntou se frações negativas seguem a mesma 
+regra de simplificação, e expliquei que sim, o processo é o mesmo.
+
+Só um adendo: o Pedro foi advertido hoje porque ficou mexendo 
+no celular durante a explicação da matéria, mesmo depois de eu 
+pedir duas vezes pra guardar.
+'''
 #passando texto para formatação com llm
 prompt = f"""
 Analise a transcrição de uma aula.
@@ -58,14 +76,16 @@ Transcrição:
 {texto}
 """
 resposta = chat(
-    model="llama3.2",
+    model="seu-modelo",
     messages=[
         {
             "role": "user",
-            "content": f"{prompt}"
+            "content": texto
         }
-    ]
+    ],
+    format=Aula.model_json_schema()
 )
+
 
 print(resposta.message.content)
 
