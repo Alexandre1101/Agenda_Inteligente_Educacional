@@ -1,7 +1,6 @@
 #arquivo para interface de gravação de áudio
 
 import streamlit as st
-from pathlib import Path
 
 from audio.recorder import save_audio
 
@@ -10,35 +9,61 @@ def recording_page():
 
     st.title("🎙️ Nova aula")
 
+    if "audio_path" not in st.session_state:
+        st.session_state.audio_path = None
+
+    if "recording_confirmed" not in st.session_state:
+        st.session_state.recording_confirmed = False
+
     audio = st.audio_input("Gravar aula")
 
-    if audio is None:
-        return
+    if audio is not None:
 
-    st.subheader("Prévia da gravação")
-    st.audio(audio)
+        st.subheader("Prévia da gravação")
 
-    st.write(f"Tamanho do arquivo: {audio.size / 1024:.1f} KB")
+        st.audio(audio)
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        confirmar = st.button(
-            "✅ Confirmar gravação",
-            type="primary"
+        st.write(
+            f"Tamanho: {audio.size / 1024:.1f} KB"
         )
 
-    with col2:
-        cancelar = st.button("❌ Descartar")
+        col1, col2 = st.columns(2)
 
-    if confirmar:
+        with col1:
+            confirmar = st.button(
+                "✅ Confirmar gravação",
+                type="primary"
+            )
 
-        audio_path = save_audio(
-            audio.getvalue(),
-            "data/audio/aula.wav"
+        with col2:
+            cancelar = st.button("❌ Descartar")
+
+        if confirmar:
+
+            audio_path = save_audio(
+                audio.getvalue()
+            )
+
+            st.session_state.audio_path = str(audio_path)
+            st.session_state.recording_confirmed = True
+
+            st.success("Gravação salva com sucesso!")
+
+        if cancelar:
+
+            st.session_state.audio_path = None
+            st.session_state.recording_confirmed = False
+
+            st.rerun()
+
+    if st.session_state.recording_confirmed:
+
+        st.divider()
+
+        st.success(
+            f"Áudio salvo em: {st.session_state.audio_path}"
         )
 
-        st.success(f"Gravação salva: {audio_path}")
-
-    if cancelar:
-        st.info("Gravação descartada.")
+        st.info(
+            "A gravação está pronta para ser processada."
+        )

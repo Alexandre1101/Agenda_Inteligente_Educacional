@@ -1,78 +1,48 @@
 #arquivo para interface de revisão do professor 
 
 import streamlit as st
-from audio.recorder import save_audio
 
 
-def recording_page():
+def review_page():
 
-    st.title("🎙️ Nova aula")
+    st.title("📚 Revisão da aula")
 
-    # Estado inicial
-    if "audio_path" not in st.session_state:
-        st.session_state.audio_path = None
+    audio_path = st.session_state.get("audio_path")
 
-    if "recording_confirmed" not in st.session_state:
-        st.session_state.recording_confirmed = False
+    if not audio_path:
+        st.info("Nenhuma aula disponível para revisão.")
+        return
 
-    # Captura do áudio
-    audio = st.audio_input("Gravar aula")
+    st.subheader("🎧 Áudio")
 
-    if audio is not None:
+    with open(audio_path, "rb") as arquivo:
+        audio_data = arquivo.read()
 
-        st.subheader("Prévia da gravação")
+    st.audio(audio_data)
 
-        st.audio(audio)
+    st.divider()
 
-        st.write(
-            f"Tamanho: {audio.size / 1024:.1f} KB"
+    st.subheader("📝 Transcrição")
+
+    texto = st.session_state.get("texto")
+
+    if texto:
+        st.text_area(
+            "Texto transcrito",
+            value=texto,
+            height=300
         )
+    else:
+        st.info("A aula ainda não foi transcrita.")
 
-        col1, col2 = st.columns(2)
+    st.divider()
 
-        with col1:
+    st.subheader("🤖 Informações extraídas")
 
-            confirmar = st.button(
-                "✅ Confirmar gravação",
-                type="primary"
-            )
+    aula = st.session_state.get("aula")
 
-        with col2:
-
-            cancelar = st.button(
-                "❌ Descartar"
-            )
-
-        # Confirmar
-        if confirmar:
-
-            audio_path = save_audio(
-                audio.getvalue()
-            )
-
-            st.session_state.audio_path = str(audio_path)
-            st.session_state.recording_confirmed = True
-
-            st.success("Gravação salva com sucesso!")
-
-        # Cancelar
-        if cancelar:
-
-            st.session_state.audio_path = None
-            st.session_state.recording_confirmed = False
-
-            st.rerun()
-
-    # Mostrar estado depois da confirmação
-    if st.session_state.recording_confirmed:
-
-        st.divider()
-
-        st.success(
-            f"Áudio salvo em: "
-            f"{st.session_state.audio_path}"
-        )
-
-        st.info(
-            "A gravação está pronta para ser processada."
-        )
+    if aula:
+        st.write("**Matéria:**", aula.materia)
+        st.write("**Assunto:**", aula.assunto)
+    else:
+        st.info("A aula ainda não foi processada.")
