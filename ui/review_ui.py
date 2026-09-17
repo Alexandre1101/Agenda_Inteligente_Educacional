@@ -1,69 +1,78 @@
 #arquivo para interface de revisão do professor 
 
 import streamlit as st
+from audio.recorder import save_audio
 
 
-def review_page(texto, aula, audio_path):
+def recording_page():
 
-    st.title("📚 Revisão da aula")
+    st.title("🎙️ Nova aula")
 
-    st.subheader("🎧 Áudio")
+    # Estado inicial
+    if "audio_path" not in st.session_state:
+        st.session_state.audio_path = None
 
-    with open(audio_path, "rb") as arquivo:
-        audio_data = arquivo.read()
+    if "recording_confirmed" not in st.session_state:
+        st.session_state.recording_confirmed = False
 
-    st.audio(audio_data)
+    # Captura do áudio
+    audio = st.audio_input("Gravar aula")
 
-    st.divider()
+    if audio is not None:
 
-    st.subheader("📝 Transcrição")
+        st.subheader("Prévia da gravação")
 
-    st.text_area(
-        "Texto transcrito",
-        value=texto,
-        height=300
-    )
+        st.audio(audio)
 
-    st.divider()
+        st.write(
+            f"Tamanho: {audio.size / 1024:.1f} KB"
+        )
 
-    st.subheader("🤖 Informações extraídas")
+        col1, col2 = st.columns(2)
 
-    st.write("**Matéria:**", aula.materia or "Não identificada")
-    st.write("**Assunto:**", aula.assunto or "Não identificado")
+        with col1:
 
-    st.divider()
-
-    st.subheader("📝 Provas")
-
-    if aula.provas:
-        for prova in aula.provas:
-            st.write(
-                f"- {prova.materia or 'Matéria não informada'} "
-                f"— {prova.data or 'Data não informada'}"
+            confirmar = st.button(
+                "✅ Confirmar gravação",
+                type="primary"
             )
-    else:
-        st.write("Nenhuma prova mencionada.")
 
-    st.subheader("❓ Dúvidas")
+        with col2:
 
-    if aula.duvidas:
-        for duvida in aula.duvidas:
-            aluno = duvida.aluno or "Aluno não identificado"
-
-            st.write(
-                f"**{aluno}:** {duvida.descricao}"
+            cancelar = st.button(
+                "❌ Descartar"
             )
-    else:
-        st.write("Nenhuma dúvida mencionada.")
 
-    st.subheader("⚠️ Advertências")
+        # Confirmar
+        if confirmar:
 
-    if aula.advertencias:
-        for advertencia in aula.advertencias:
-            aluno = advertencia.aluno or "Aluno não identificado"
-
-            st.write(
-                f"**{aluno}:** {advertencia.motivo}"
+            audio_path = save_audio(
+                audio.getvalue()
             )
-    else:
-        st.write("Nenhuma advertência mencionada.")
+
+            st.session_state.audio_path = str(audio_path)
+            st.session_state.recording_confirmed = True
+
+            st.success("Gravação salva com sucesso!")
+
+        # Cancelar
+        if cancelar:
+
+            st.session_state.audio_path = None
+            st.session_state.recording_confirmed = False
+
+            st.rerun()
+
+    # Mostrar estado depois da confirmação
+    if st.session_state.recording_confirmed:
+
+        st.divider()
+
+        st.success(
+            f"Áudio salvo em: "
+            f"{st.session_state.audio_path}"
+        )
+
+        st.info(
+            "A gravação está pronta para ser processada."
+        )
