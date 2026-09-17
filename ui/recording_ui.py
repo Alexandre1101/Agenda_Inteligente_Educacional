@@ -3,21 +3,42 @@
 import streamlit as st
 from pathlib import Path
 
+from audio.recorder import save_audio
+
 
 def recording_page():
-    st.title("Gravar aula")
 
-    audio = st.audio_input("Clique para gravar")
+    st.title("🎙️ Nova aula")
 
-    if audio is not None:
-        st.audio(audio)
+    audio = st.audio_input("Gravar aula")
 
-        audio_dir = Path("data/audio")
-        audio_dir.mkdir(parents=True, exist_ok=True)
+    if audio is None:
+        return
 
-        audio_path = audio_dir / "aula.wav"
+    st.subheader("Prévia da gravação")
+    st.audio(audio)
 
-        with open(audio_path, "wb") as arquivo:
-            arquivo.write(audio.getvalue())
+    st.write(f"Tamanho do arquivo: {audio.size / 1024:.1f} KB")
 
-        st.success(f"Áudio salvo em: {audio_path}")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        confirmar = st.button(
+            "✅ Confirmar gravação",
+            type="primary"
+        )
+
+    with col2:
+        cancelar = st.button("❌ Descartar")
+
+    if confirmar:
+
+        audio_path = save_audio(
+            audio.getvalue(),
+            "data/audio/aula.wav"
+        )
+
+        st.success(f"Gravação salva: {audio_path}")
+
+    if cancelar:
+        st.info("Gravação descartada.")
