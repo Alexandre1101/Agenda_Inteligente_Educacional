@@ -9,4 +9,4 @@ __pycache__/
 *.sqlite
 *.sqlite3
 
-mp3/
+data/audio/
