@@ -7,45 +7,26 @@ Analise a transcrição de uma aula.
 
 Extraia somente informações que realmente aparecem no texto.
 
-Retorne exclusivamente um JSON válido, sem markdown e sem explicações.
+Categorias:
 
-O JSON deve seguir exatamente esta estrutura:
+- materia: matéria estudada
+- assunto: assunto da aula
+- provas: avaliações mencionadas
+- duvidas: dúvidas dos alunos
+- advertencias: alunos advertidos
 
-{
-    "materia": null,
-    "assunto": null,
+Não invente informações.
+Se uma informação não estiver presente, deixe o campo vazio.
+
+Retorne somente um JSON neste formato:
+
+{{
+    "materia": "",
+    "assunto": "",
     "provas": [],
     "duvidas": [],
     "advertencias": []
-}
-
-Cada prova deve seguir:
-{
-    "data": null,
-    "materia": null
-}
-
-Cada dúvida deve seguir:
-{
-    "aluno": null,
-    "descricao": ""
-}
-
-Cada advertência deve seguir:
-{
-    "aluno": null,
-    "motivo": ""
-}
-
-Regras:
-
-- Não invente informações.
-- Se a matéria não aparecer, use null.
-- Se o assunto não aparecer, use null.
-- Se não houver provas, use [].
-- Se não houver dúvidas, use [].
-- Se não houver advertências, use [].
-- Use somente informações presentes na transcrição.
+}}
 
 Transcrição:
 
