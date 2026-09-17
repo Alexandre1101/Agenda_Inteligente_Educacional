@@ -8,4 +8,11 @@ from audio.recorder import save_audio
 
 
 
+st.set_page_config(
+    page_title="MVP Professor",
+    page_icon="🎓",
+    layout="centered"
+)
+
+
 recording_page()
