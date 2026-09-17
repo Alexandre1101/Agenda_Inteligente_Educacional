@@ -3,15 +3,18 @@
 import whisper
 
 
-def transcriber(audio):
-    model = whisper.load_model("large")
+import whisper
+
+
+model = whisper.load_model("large")
+
+
+def transcriber(audio_path):
 
     result = model.transcribe(
-        audio,
+        str(audio_path),
         language="pt",
         fp16=False
     )
 
-    texto = result["text"]
-
-    return texto
+    return result["text"]
