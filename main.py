@@ -3,7 +3,7 @@
 import streamlit as st
 from ui.recording_ui import recording_page
 from ui.processing_ui import processing_page
-
+from ui.review_ui import review_page
 
 st.set_page_config(
     page_title="AI Educacional",
@@ -18,3 +18,7 @@ recording_page()
 st.divider()
 
 processing_page()
+
+st.divider()
+
+review_page()

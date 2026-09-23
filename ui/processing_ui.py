@@ -2,52 +2,38 @@
 
 import streamlit as st
 
-from services.lesson_service import process_lesson
+from audio.transcriber import transcriber
+from ai.extractor import extractor
+
+
+def process_lesson(audio_path):
+
+    texto = transcriber(audio_path)
+
+    aula = extractor(texto)
+
+    return texto, aula
 
 
 def processing_page():
 
-    st.header("🤖 Processar aula")
+    st.header("⚙️ Processamento")
 
     audio_path = st.session_state.get("audio_path")
 
     if not audio_path:
-        st.info(
-            "Nenhuma gravação disponível."
-        )
+        st.info("Nenhuma gravação disponível.")
         return
 
-    st.success(
-        f"Gravação disponível: `{audio_path}`"
-    )
+    st.write(f"Arquivo: `{audio_path}`")
 
-    if st.button(
-        "🎙️ Transcrever áudio",
-        type="primary"
-    ):
+    if st.button("🤖 Processar aula", type="primary"):
 
-        with st.spinner(
-            "Transcrevendo áudio..."
-        ):
+        with st.spinner("Processando aula..."):
 
-            texto = process_lesson(
-                audio_path
-            )
+            texto, aula = process_lesson(audio_path)
 
         st.session_state.texto = texto
+        st.session_state.aula = aula
 
-        st.success(
-            "Transcrição concluída!"
-        )
-
-    texto = st.session_state.get("texto")
-
-    if texto:
-
-        st.subheader("📝 Transcrição")
-
-        st.text_area(
-            "Texto transcrito",
-            value=texto,
-            height=400
-        )
+        st.success("Aula processada com sucesso!")
