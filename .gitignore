@@ -10,4 +10,4 @@ __pycache__/
 *.sqlite3
 
 data/audio/
-*teste_audio.py
+teste_audio.py
