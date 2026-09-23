@@ -11,3 +11,4 @@ __pycache__/
 
 data/audio/
 teste_audio.py
+__init__.py
