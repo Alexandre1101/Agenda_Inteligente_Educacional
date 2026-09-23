@@ -2,12 +2,13 @@ from ollama import chat
 from config import MODEL, PROMPT
 from models.schemas import Aula
 from pydantic import ValidationError
-import json
 
 
 def extractor(texto):
 
     prompt = PROMPT.format(texto=texto)
+
+    schema = Aula.model_json_schema()
 
     resposta = chat(
         model=MODEL,
@@ -17,30 +18,20 @@ def extractor(texto):
                 "content": prompt
             }
         ],
-        format="json"
+        format=schema
     )
 
     try:
-        dados = json.loads(resposta.message.content)
-
-        aula = Aula.model_validate(dados)
+        aula = Aula.model_validate_json(resposta.message.content)
 
         return aula
-
-    except json.JSONDecodeError as erro:
-        print("A IA não retornou um JSON válido.")
-        print(resposta.message.content)
-        print(erro)
-        return None
 
     except ValidationError as erro:
         print("Os dados retornados pela IA não seguem o schema:")
         print(erro)
+        print("\nResposta da IA:")
+        print(resposta.message.content)
+
         return None
 
-texto = '''Hoje tivemos aula de matemática sobre equações do primeiro grau.
-Alguns alunos tiveram dificuldade para isolar a incógnita.
-A prova será na próxima sexta-feira.'''
 
-aula = extractor(texto)
-print (aula)
