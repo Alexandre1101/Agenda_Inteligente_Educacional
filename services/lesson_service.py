@@ -8,6 +8,6 @@ def process_lesson(audio_path):
 
     texto = transcriber(audio_path)
 
-    #aula = extractor(texto)
+    aula = extractor(texto)
 
-    return texto#, aula
+    return texto, aula

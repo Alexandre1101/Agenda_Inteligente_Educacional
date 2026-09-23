@@ -6,7 +6,7 @@ from ui.processing_ui import processing_page
 
 
 st.set_page_config(
-    page_title="MVP Professor",
+    page_title="AI Educacional",
     page_icon="🎓"
 )
 

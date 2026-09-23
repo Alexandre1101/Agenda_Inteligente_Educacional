@@ -6,29 +6,53 @@ PROMPT = """
 Analise a transcrição de uma aula.
 
 Extraia somente informações que realmente aparecem no texto.
+Não invente informações.
 
 Categorias:
 
-- materia: matéria estudada
-- assunto: assunto da aula
-- provas: avaliações mencionadas
-- duvidas: dúvidas dos alunos
-- advertencias: alunos advertidos
+- materia: matéria estudada.
+- assunto: assunto principal da aula.
+- provas: avaliações ou provas mencionadas. Cada item deve ser um objeto com:
+  - data: data ou momento mencionado para a prova.
+  - materia: matéria da prova, se estiver disponível.
+- duvidas: dúvidas dos alunos. Cada item deve ser um objeto com:
+  - aluno: nome do aluno, se estiver disponível.
+  - descricao: descrição da dúvida.
+- advertencias: advertências mencionadas. Cada item deve ser um objeto com:
+  - aluno: nome do aluno, se estiver disponível.
+  - motivo: motivo da advertência.
 
-Não invente informações. Corrija erros de concordância verbal.
-Se uma informação não estiver presente, deixe o campo vazio.
+Se uma informação não estiver presente, use null.
 
-Retorne somente um JSON neste formato:
+Retorne SOMENTE um JSON válido, exatamente nesta estrutura:
 
 {{
-    "materia": "",
-    "assunto": "",
-    "provas": [],
-    "duvidas": [],
-    "advertencias": []
+    "materia": null,
+    "assunto": null,
+    "provas": [
+        {{
+            "data": null,
+            "materia": null
+        }}
+    ],
+    "duvidas": [
+        {{
+            "aluno": null,
+            "descricao": null
+        }}
+    ],
+    "advertencias": [
+        {{
+            "aluno": null,
+            "motivo": null
+        }}
+    ]
 }}
+
+Se não houver provas, dúvidas ou advertências, use uma lista vazia.
 
 Transcrição:
 
 {texto}
 """
+

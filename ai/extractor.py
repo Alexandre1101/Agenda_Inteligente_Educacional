@@ -37,3 +37,10 @@ def extractor(texto):
         print("Os dados retornados pela IA não seguem o schema:")
         print(erro)
         return None
+
+texto = '''Hoje tivemos aula de matemática sobre equações do primeiro grau.
+Alguns alunos tiveram dificuldade para isolar a incógnita.
+A prova será na próxima sexta-feira.'''
+
+aula = extractor(texto)
+print (aula)
