@@ -3,7 +3,7 @@
 import whisper
 
 
-model = whisper.load_model("tiny")
+model = whisper.load_model("small")
 
 
 def transcriber(audio_path):

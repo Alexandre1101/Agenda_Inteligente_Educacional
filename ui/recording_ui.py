@@ -1,13 +1,12 @@
 #arquivo para interface de gravação de áudio
 
 import streamlit as st
-
 from audio.recorder import save_audio
 
 
 def recording_page():
 
-    st.title("🎙️ Nova aula")
+    st.header("🎙️ Nova aula")
 
     audio = st.audio_input(
         "Gravar aula",
@@ -26,7 +25,7 @@ def recording_page():
         )
 
         if st.button(
-            "✅ Salvar teste",
+            "✅ Salvar gravação",
             type="primary"
         ):
 
@@ -34,6 +33,14 @@ def recording_page():
                 audio.getvalue()
             )
 
+            st.session_state.audio_path = str(
+                audio_path
+            )
+
             st.success(
-                f"Áudio salvo em: {audio_path}"
+                "Gravação salva com sucesso!"
+            )
+
+            st.write(
+                f"Arquivo: `{audio_path}`"
             )
