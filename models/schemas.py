@@ -12,12 +12,13 @@ class Prova(BaseModel):
 
 class Duvida(BaseModel):
     aluno: Optional[str] = None
-    descricao: str
+    descricao: Optional[str] = None
 
 
 class Advertencia(BaseModel):
     aluno: Optional[str] = None
-    motivo: str
+    motivo: Optional[str] = None
+
 
 
 class Aula(BaseModel):

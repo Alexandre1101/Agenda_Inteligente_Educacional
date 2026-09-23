@@ -1,4 +1,4 @@
-#gpt sugeriu mas estou achando inutil 
+#camada: UI > Service > Transcrição > IA
 
 from audio.transcriber import transcriber
 from ai.extractor import extractor

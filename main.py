@@ -2,6 +2,8 @@
 import streamlit as st
 
 from ui.recording_ui import recording_page
+from ui.review_ui import review_page
+
 
 
 st.set_page_config(

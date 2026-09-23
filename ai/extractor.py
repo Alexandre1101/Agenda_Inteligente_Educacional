@@ -1,12 +1,12 @@
-#arquivo para centralizar funçoes da extração de dados do texto transcrito, podemos deixar o prompt aqui ou em config
 from ollama import chat
 from config import MODEL, PROMPT
 from models.schemas import Aula
-import json
 from pydantic import ValidationError
+import json
 
 
 def extractor(texto):
+
     prompt = PROMPT.format(texto=texto)
 
     resposta = chat(
@@ -16,17 +16,21 @@ def extractor(texto):
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        format="json"
     )
 
     try:
         dados = json.loads(resposta.message.content)
+
         aula = Aula.model_validate(dados)
 
         return aula
 
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as erro:
         print("A IA não retornou um JSON válido.")
+        print(resposta.message.content)
+        print(erro)
         return None
 
     except ValidationError as erro:
