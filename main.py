@@ -11,16 +11,10 @@ st.set_page_config(
 )
 
 
-tab1, tab2 = st.tabs([
-    "🎙️ Nova aula",
-    "🤖 Processar aula"
-])
+st.title("🎓 AI Educacional")
 
+recording_page()
 
-with tab1:
-    recording_page()
+st.divider()
 
-
-with tab2:
-    processing_page()
-
+processing_page()
